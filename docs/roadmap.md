@@ -10,7 +10,7 @@ An order, not a schedule. Each item ends with something that works and is covere
 - [ ] `common/filters` + `common/dto`: one error shape, global `ValidationPipe`
 - [ ] Healthcheck endpoint
 - [ ] Docker Compose with PostgreSQL for local development
-- [ ] CI: lint + test + build on every PR
+- [x] CI: format, lint, typecheck, test and build on every PR; git hooks and commitlint
 
 ## 1. Data and users
 
