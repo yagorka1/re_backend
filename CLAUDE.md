@@ -119,6 +119,12 @@ slipped past a bypassed hook still fails the build.
 
 `--no-verify` exists for emergencies. It skips the hooks, not CI — the same checks run on the PR.
 
+CI installs **npm 12** (`NPM_VERSION` in the workflow) before `npm ci`. Node 22 ships npm 10, which
+resolves optional peer dependencies differently and rejects a lock file written by npm 12 with
+`Missing: … from lock file`. Keep the pin and the npm you run locally on the same major, and
+regenerate `package-lock.json` with that npm — a lock file from another major breaks every CI job
+at the install step.
+
 Line endings are LF everywhere, enforced by `.gitattributes` (`eol=lf`), including in a Windows
 working tree. Without it `format:check` disagrees between a local machine and CI.
 

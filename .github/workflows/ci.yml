@@ -12,6 +12,10 @@ concurrency:
 env:
   # Hooks are a local convenience; CI has no working tree to install them into.
   HUSKY: 0
+  # Node 22 ships npm 10, which resolves optional peer dependencies differently
+  # and then rejects a lock file written by npm 12 ("Missing: … from lock file").
+  # Pin the major so `npm ci` reads the lock the way the developer wrote it.
+  NPM_VERSION: 12
 
 jobs:
   verify:
@@ -24,6 +28,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - run: npm i -g npm@${{ env.NPM_VERSION }}
 
       - run: npm ci
 
@@ -55,6 +61,8 @@ jobs:
           node-version: 22
           cache: npm
 
+      - run: npm i -g npm@${{ env.NPM_VERSION }}
+
       - run: npm ci
 
       - name: e2e tests
@@ -73,6 +81,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - run: npm i -g npm@${{ env.NPM_VERSION }}
 
       - run: npm ci
 
