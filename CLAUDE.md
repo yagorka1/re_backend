@@ -90,7 +90,7 @@ the **same commit** as the change, not in a follow-up.
 | A roadmap item finished or reordered              | `docs/roadmap.md`                                                       |
 | A new environment variable                        | `.env.example` and the validation schema in `src/config/`               |
 | Schema conventions or migration workflow          | `prisma/CLAUDE.md`                                                      |
-| A git hook, a CI job, or the commit convention    | the "Hooks, commits and CI" section above                               |
+| A git hook, a CI job, or the commit convention    | the "Hooks, commits and CI" section of this file                        |
 | Test layout, commands, or the test database setup | `test/CLAUDE.md`                                                        |
 
 Two specifics that are easy to get wrong:
