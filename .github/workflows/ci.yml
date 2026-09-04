@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Hooks are a local convenience; CI has no working tree to install them into.
+  HUSKY: 0
+  # Node 22 ships npm 10, which resolves optional peer dependencies differently
+  # and then rejects a lock file written by npm 12 ("Missing: … from lock file").
+  # Pin the major so `npm ci` reads the lock the way the developer wrote it.
+  NPM_VERSION: 12
+
+jobs:
+  verify:
+    name: lint · typecheck · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm i -g npm@${{ env.NPM_VERSION }}
+
+      - run: npm ci
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  e2e:
+    name: e2e
+    runs-on: ubuntu-latest
+    # When Prisma lands, this job gets a `services: postgres` block and a
+    # DATABASE_URL pointing at it — see test/CLAUDE.md.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm i -g npm@${{ env.NPM_VERSION }}
+
+      - run: npm ci
+
+      - name: e2e tests
+        run: npm run test:e2e
+
+  commits:
+    name: commit messages
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm i -g npm@${{ env.NPM_VERSION }}
+
+      - run: npm ci
+
+      - name: commitlint
+        run: >
+          npx commitlint
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
+          --verbose

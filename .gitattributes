@@ -1,0 +1,14 @@
+# Line endings are LF in the repository *and* in the working tree, on every OS.
+# Without `eol=lf` a Windows checkout (core.autocrlf=true) gets CRLF, and then
+# `npm run format:check` fails locally while passing in CI.
+* text=auto eol=lf
+
+# Shell hooks must stay LF whatever the platform.
+.husky/** text eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
