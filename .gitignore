@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /build
+*.tsbuildinfo
 
 # Logs
 logs
@@ -41,6 +42,9 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 .env.local
+
+# Claude Code (shared .claude/settings.json is committed, personal overrides are not)
+.claude/settings.local.json
 
 # temp directory
 .temp
